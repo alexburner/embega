@@ -23,9 +23,9 @@ const zSymbolsResponse = z.object({
   ),
 });
 
-// https://www.alphavantage.co/documentation/#weekly
-const zWeeklyResponse = z.object({
-  'Weekly Time Series': z.record(
+// https://www.alphavantage.co/documentation/#monthly
+const zTimeSeriesResponse = z.object({
+  'Monthly Time Series': z.record(
     z.object({
       '1. open': z.string(),
       '2. high': z.string(),
@@ -37,7 +37,7 @@ const zWeeklyResponse = z.object({
 });
 
 export interface StockDatum {
-  date: Date;
+  date: string;
   open: number;
   close: number;
   high: number;
@@ -75,14 +75,14 @@ export default class ApplicationController extends Controller {
     if (!symbol) return;
 
     const response = await fetch(
-      `${API_URL}?function=TIME_SERIES_WEEKLY&symbol=${symbol}&apikey=${API_KEY}`
+      `${API_URL}?function=TIME_SERIES_MONTHLY&symbol=${symbol}&apikey=${API_KEY}`
     );
 
     const json = await response.json();
-    const parsed = zWeeklyResponse.parse(json);
-    const stockData = Object.entries(parsed['Weekly Time Series']).map(
+    const parsed = zTimeSeriesResponse.parse(json);
+    const stockData = Object.entries(parsed['Monthly Time Series']).map(
       ([date, datum]) => ({
-        date: new Date(date),
+        date,
         open: Number(datum['1. open']),
         close: Number(datum['4. close']),
         high: Number(datum['2. high']),
