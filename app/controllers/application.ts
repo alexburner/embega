@@ -23,25 +23,76 @@ const zSymbolsResponse = z.object({
   ),
 });
 
+// https://www.alphavantage.co/documentation/#weekly
+const zWeeklyResponse = z.object({
+  'Weekly Time Series': z.record(
+    z.object({
+      '1. open': z.string(),
+      '2. high': z.string(),
+      '3. low': z.string(),
+      '4. close': z.string(),
+      '5. volume': z.string(),
+    })
+  ),
+});
+
+interface StockDatum {
+  date: Date;
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+  volume: number;
+}
+
 export default class ApplicationController extends Controller {
   @tracked symbol: string = '';
-  @tracked symbols: string[] = [];
+  @tracked missingSymbol: boolean = true;
+  @tracked symbolOptions: string[] = [];
+  @tracked stockData: StockDatum[] = [];
 
   @action
   setSymbol(symbol: string) {
     this.symbol = symbol;
+    this.missingSymbol = symbol.length === 0;
   }
 
   @action
-  async searchSymbols(search: string) {
+  async searchSymbols(keyword: string) {
     const response = await fetch(
-      `${API_URL}?function=SYMBOL_SEARCH&keywords=${search}&apikey=${API_KEY}`
+      `${API_URL}?function=SYMBOL_SEARCH&keywords=${keyword}&apikey=${API_KEY}`
     );
 
     const json = await response.json();
     const parsed = zSymbolsResponse.parse(json);
     const symbols = parsed.bestMatches.map((match) => match['1. symbol']);
 
-    this.symbols = symbols;
+    this.symbolOptions = symbols;
+  }
+
+  @action
+  async getStockData(symbol?: string) {
+    if (!symbol) return;
+
+    const response = await fetch(
+      `${API_URL}?function=TIME_SERIES_WEEKLY&symbol=${symbol}&apikey=${API_KEY}`
+    );
+
+    const json = await response.json();
+    const parsed = zWeeklyResponse.parse(json);
+    const stockData = Object.entries(parsed['Weekly Time Series']).map(
+      ([date, datum]) => ({
+        date: new Date(date),
+        open: Number(datum['1. open']),
+        close: Number(datum['4. close']),
+        high: Number(datum['2. high']),
+        low: Number(datum['3. low']),
+        volume: Number(datum['5. volume']),
+      })
+    );
+
+    console.log(stockData);
+
+    this.stockData = stockData;
   }
 }

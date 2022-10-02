@@ -1,17 +1,27 @@
 {{page-title 'Embega'}}
 
 <div class='container'>
-
-  <AutocompleteInput
-    id='symbol-search-input'
-    class='form-control'
-    placeholder='Search for stock symbol'
-    @value={{this.symbol}}
-    @onInput={{this.setSymbol}}
-    @search={{this.searchSymbols}}
-    @options={{this.symbols}}
-  />
-
+  <div class='row'>
+    <div class='col-9'>
+      <AutocompleteInput
+        id='symbol-search-input'
+        class='form-control'
+        placeholder='Search for stock symbol'
+        @value={{this.symbol}}
+        @onInput={{this.setSymbol}}
+        @search={{this.searchSymbols}}
+        @options={{this.symbolOptions}}
+      />
+    </div>
+    <div class='col-3'>
+      <button
+        type='button'
+        class='btn btn-primary'
+        disabled={{this.missingSymbol}}
+        {{on 'click' (fn this.getStockData this.symbol)}}
+      >Fetch Stock Data</button>
+    </div>
+  </div>
 </div>
 
 {{outlet}}

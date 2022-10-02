@@ -33,7 +33,7 @@ export default class AutocompleteInputComponent extends Component<S> {
       return;
     }
 
-    const debounce = 250;
+    const debounce = 1000;
     yield timeout(debounce);
 
     if (value) {
