@@ -1,0 +1,13 @@
+{{! Via https://github.com/iamdtang/autocomplete-input/blob/main/app/components/autocomplete-input.hbs }}
+<input
+  list={{this.listId}}
+  value={{@value}}
+  ...attributes
+  onInput={{perform this.onInputTask}}
+/>
+
+<datalist id={{this.listId}}>
+  {{#each @options as |value|}}
+    <option value={{value}}></option>
+  {{/each}}
+</datalist>
