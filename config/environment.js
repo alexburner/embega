@@ -4,7 +4,7 @@ module.exports = function (environment) {
   let ENV = {
     modulePrefix: 'embega',
     environment,
-    rootURL: '/',
+    rootURL: '/embega/', // For GH pages
     locationType: 'history',
     EmberENV: {
       FEATURES: {
