@@ -36,7 +36,7 @@ const zWeeklyResponse = z.object({
   ),
 });
 
-interface StockDatum {
+export interface StockDatum {
   date: Date;
   open: number;
   close: number;
