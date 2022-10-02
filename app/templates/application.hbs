@@ -1,8 +1,9 @@
 {{page-title 'Embega'}}
 
 <div class='container'>
-  <div class='row'>
-    <div class='col-9'>
+  <h1 class='my-4'>Monthly Stock Prices</h1>
+  <div class='row g-2'>
+    <div class='col-10'>
       <AutocompleteInput
         id='symbol-search-input'
         class='form-control'
@@ -13,7 +14,7 @@
         @options={{this.symbolOptions}}
       />
     </div>
-    <div class='col-3'>
+    <div class='col-2 d-grid'>
       <button
         type='button'
         class='btn btn-primary'
@@ -22,10 +23,8 @@
       >Fetch Stock Data</button>
     </div>
   </div>
-  <div class='row'>
-    <div class='column'>
-      <StockVis @stockData={{this.stockData}} />
-    </div>
+  <div class='mt-4'>
+    <StockVis @stockData={{this.stockData}} />
   </div>
 </div>
 

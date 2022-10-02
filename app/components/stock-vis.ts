@@ -119,7 +119,7 @@ export default class StockVis extends Component<S> {
             },
             y: {
               type: 'quantitative',
-              axis: { title: '' },
+              axis: { title: '', grid: false },
             },
             color: {
               condition: {
